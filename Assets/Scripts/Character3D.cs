@@ -4,7 +4,6 @@ using UnityEngine;
 using GameCore.PlayerController;
 
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(CharacterController))]
 public class Character3D : MonoBehaviour 
 {
 	[SerializeField]
