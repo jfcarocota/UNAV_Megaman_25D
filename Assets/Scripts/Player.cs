@@ -14,7 +14,7 @@ public class Player : Character3D
     protected override void Jump()
     {
         base.Jump();
-
+        anim.SetBool("Grounding", grounding);
         if (jumping)
         {
             anim.SetTrigger("Jumping");

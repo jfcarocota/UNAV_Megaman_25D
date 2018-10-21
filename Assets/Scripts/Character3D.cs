@@ -9,25 +9,26 @@ public class Character3D : MonoBehaviour
 	[SerializeField]
     private float moveSpeed = 2.0f;
 
+	protected Rigidbody rb;
+
 	//Jump
-	private float verticalVelocity;
-	private float gravity = 9.8f;
-	private float jumpForce = 4f;
+	[SerializeField]
+	private float jumpForce = 1f;
 
 	protected bool jumping;
 	protected bool shoot;
-
 	protected bool slide;
-
 	protected Animator anim;
-	protected CharacterController controller;
-
     protected float rotY = 0f;
+
+	[SerializeField]
+    GroundSystem groundSystem;
+	protected bool grounding;
 
     private void Awake()
     {
 		anim = GetComponent<Animator>();
-		controller = GetComponent<CharacterController>();	
+		rb = GetComponent<Rigidbody>();
 	}
 
 	private void FixedUpdate()
@@ -46,26 +47,17 @@ public class Character3D : MonoBehaviour
 
 	protected virtual void Move3D()
 	{
-        transform.Translate(Vector3.forward * Mathf.Abs(ComponentX) * Time.deltaTime * moveSpeed);
+		grounding = groundSystem.CheckGround(transform);
+		transform.Translate(0f,0f,moveSpeed * Mathf.Abs(ComponentX)*Time.deltaTime);
 	}
 
 	protected virtual void Jump()
 	{
-		if(controller.isGrounded)
+		jumping=Btn_jump & grounding;
+		if(jumping)
 		{
-			verticalVelocity = -gravity * Time.deltaTime;
-			if(Btn_jump)
-			{
-				jumping = Btn_jump;
-				verticalVelocity = jumpForce;
-			}
+			rb.AddForce(Vector3.up * (jumping?jumpForce:0), ForceMode.Impulse);
 		}
-        else
-		{
-			verticalVelocity -= gravity*Time.deltaTime;
-		}
-		Vector3 moveVector = new Vector3(0,verticalVelocity,0);
-		controller.Move(moveVector*Time.deltaTime);
 	}
 
     void Flip()
@@ -81,6 +73,14 @@ public class Character3D : MonoBehaviour
 	protected virtual void Shoot()
 	{
 		shoot = (Btn_Fire)?true:false;
+	}
+
+	private void OnDrawGizmos()
+	{
+		groundSystem.DrawRay(transform);
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition,transform.forward * 1f);
+		//Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition, transform.right * 2f);
 	}
 
 	protected float ComponentX
