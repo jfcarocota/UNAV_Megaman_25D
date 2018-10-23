@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5d351d15faf8b1d40aec09aa1a27da24
+guid: 4d41c92f81cacf54c9cbf78c4b5f1c1f
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -59,12 +59,12 @@ ModelImporter:
     400050: mixamorig:Spine1
     400052: mixamorig:Spine2
     400054: //RootNode
-    2100000: phong1
+    2100000: phong2
     2300000: default1
     3300000: default1
     4300000: default1
     4300002: Megaman1
-    7400000: Jump
+    7400000: Player@Jump2
     9500000: //RootNode
     13700000: Megaman1
     2186277476908879412: ImportLogs
@@ -72,7 +72,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: phong1
+      name: phong2
     second: {fileID: 2100000, guid: 0e6de36cb519ed640a17ff9c50960627, type: 2}
   materials:
     importMaterials: 1

@@ -8,8 +8,14 @@ public class Character3D : MonoBehaviour
 {
 	[SerializeField]
     private float moveSpeed = 2.0f;
-
+	
+	protected Animator anim;
 	protected Rigidbody rb;
+
+	[SerializeField]
+    protected float speedLimit;
+    Vector3 clampVel;
+	public Vector3 normal;
 
 	//Jump
 	[SerializeField]
@@ -18,7 +24,6 @@ public class Character3D : MonoBehaviour
 	protected bool jumping;
 	protected bool shoot;
 	protected bool slide;
-	protected Animator anim;
     protected float rotY = 0f;
 
 	[SerializeField]
@@ -34,7 +39,6 @@ public class Character3D : MonoBehaviour
 	private void FixedUpdate()
     {
 		Move3D();
-		Jump();
 	}
 
 
@@ -43,13 +47,33 @@ public class Character3D : MonoBehaviour
 		Shoot();
         Flip();
 		Slide();
+		Jump();
 	}
 
 	protected virtual void Move3D()
 	{
 		grounding = groundSystem.CheckGround(transform);
          
-        transform.Translate(0f, 0f, moveSpeed * Mathf.Abs(ComponentX) * Time.deltaTime);
+        //transform.Translate(0f, 0f, moveSpeed * Mathf.Abs(ComponentX) * Time.deltaTime);
+		//rb.AddForce(grounding & ComponentX != 0f?
+		//	Vector3.ProjectOnPlane(-Vector3.forward * Mathf.Abs(ComponentX) * moveSpeed,Vector3.zero)
+		//	: Vector3.forward * moveSpeed * Mathf.Abs(ComponentX), ForceMode.Impulse);
+		
+		rb.AddForce(grounding & ComponentX != 0f?
+			Vector3.ProjectOnPlane(
+				ComponentX >= 0f ? Vector3.forward:Vector3.back,normal)
+				: (ComponentX >= 0f ? Vector3.forward:Vector3.back) * moveSpeed * Mathf.Abs(ComponentX), ForceMode.Impulse);
+
+
+		clampVel = Vector3.ClampMagnitude(rb.velocity, speedLimit);
+
+		rb.velocity = new Vector3(0f,rb.velocity.y,
+            grounding & ComponentX != 0f ? clampVel.z :
+            grounding & ComponentX == 0f ? 0f : 
+            !grounding & ComponentX != 0f ? clampVel.z : 0f
+        );
+
+		rb.velocity -= ComponentX == 0f ? normal : Vector3.zero;
 	}
 
 	protected virtual void Jump()
@@ -80,7 +104,7 @@ public class Character3D : MonoBehaviour
 	{
 		groundSystem.DrawRay(transform);
 		Gizmos.color = Color.red;
-		Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition,transform.forward * 1f);
+		Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition,transform.forward * 0.2f);
 		//Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition, transform.right * 2f);
 	}
 
