@@ -8,8 +8,10 @@ public class Player : Character3D
 
     private void Start()
     {
-        healthbar = GameObject.Find("Healthbar");
+        healthbar = GameObject.Find("Healthbar"); // Barra de vida.
     }
+
+
 
     protected override void Jump()
     {

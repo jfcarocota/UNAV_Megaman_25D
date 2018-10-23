@@ -48,7 +48,8 @@ public class Character3D : MonoBehaviour
 	protected virtual void Move3D()
 	{
 		grounding = groundSystem.CheckGround(transform);
-		transform.Translate(0f,0f,moveSpeed * Mathf.Abs(ComponentX)*Time.deltaTime);
+         
+        transform.Translate(0f, 0f, moveSpeed * Mathf.Abs(ComponentX) * Time.deltaTime);
 	}
 
 	protected virtual void Jump()
