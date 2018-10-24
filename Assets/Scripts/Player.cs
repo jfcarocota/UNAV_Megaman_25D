@@ -17,10 +17,14 @@ public class Player : Character3D
     {
         base.Jump();
         anim.SetBool("Grounding", grounding);
+
+        if (grounding){ anim.SetBool("Falling", false); }
+
         if (jumping)
         {
             anim.SetTrigger("Jumping");
-            jumping=false;
+            anim.SetBool("Falling", true);
+            jumping =false;
         }
     }
 	protected override void Move3D()
@@ -44,7 +48,7 @@ public class Player : Character3D
     protected override void Slide()
     {
         base.Slide();
-        if (slide)
+        if (slide&&grounding)
         {
             anim.SetTrigger("Slide");
             slide = false;

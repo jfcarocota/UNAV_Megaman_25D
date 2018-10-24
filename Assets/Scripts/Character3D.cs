@@ -39,7 +39,8 @@ public class Character3D : MonoBehaviour
 	private void FixedUpdate()
     {
 		Move3D();
-	}
+        Jump();
+    }
 
 
 	private void Update()
@@ -47,7 +48,6 @@ public class Character3D : MonoBehaviour
 		Shoot();
         Flip();
 		Slide();
-		Jump();
 	}
 
 	protected virtual void Move3D()
@@ -105,7 +105,10 @@ public class Character3D : MonoBehaviour
 		groundSystem.DrawRay(transform);
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition,transform.forward * 0.2f);
-		//Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition, transform.right * 2f);
+        if(ComponentX != 0f)
+        {
+            Gizmos.DrawRay((Vector3)transform.position + groundSystem.StartPosition,Vector3.ProjectOnPlane(rb.velocity.normalized,normal));
+        }
 	}
 
 	protected float ComponentX
